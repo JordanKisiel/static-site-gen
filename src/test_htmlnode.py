@@ -13,3 +13,21 @@ class TestHTMLNode(unittest.TestCase):
             f" href='{props['href']}' target='{props['target']}'",
             node.props_to_html()
         )
+
+    def test_empty_props(self):
+        props = {}
+
+        node = HTMLNode("p", "My paragraph", [], props)
+
+        self.assertEqual(
+            "", node.props_to_html()
+        )
+
+    def test_to_html_error(self):
+        node = HTMLNode("img", "my raw text", [], {
+            "src": "path/to/source.jpg",
+            "alt": "my alt text"
+        })
+
+        self.assertRaises(NotImplementedError, node.to_html)
+
