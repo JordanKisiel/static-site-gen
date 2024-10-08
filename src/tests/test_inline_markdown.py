@@ -2,7 +2,7 @@ import unittest
 from src.inline_markdown import *
 from src.textnode import *
 
-class TextInlineMarkdown(unittest.TestCase):
+class TestInlineMarkdown(unittest.TestCase):
     def test_bold(self):
         node = TextNode("text with **bolded** word", text_type_text)
         new_nodes = split_nodes_delimiter([node], "**", text_type_bold)
@@ -74,6 +74,44 @@ class TextInlineMarkdown(unittest.TestCase):
 
         self.assertRaises(ValueError, split_nodes_delimiter, [node], "**", text_type_bold)
 
+    def test_extract_images_and_links(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+
+        self.assertEqual(
+            extract_images_and_links(text)["images"],
+            [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")]
+        )
+
+        self.assertEqual(
+            extract_images_and_links(text)["links"],
+            [] 
+        )
+
+        text2 = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+
+        self.assertEqual(
+            extract_images_and_links(text2)["images"],
+            []
+        )
+
+        self.assertEqual(
+            extract_images_and_links(text2)["links"],
+            [("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")]
+        )
+
+
+        text3 = "This is text with a link ![to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+
+        self.assertEqual(
+            extract_images_and_links(text3)["images"],
+            [("to boot dev", "https://www.boot.dev")]
+        )
+
+        self.assertEqual(
+            extract_images_and_links(text3)["links"],
+            [("to youtube", "https://www.youtube.com/@bootdotdev")]
+        )
+ 
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,5 @@
 from src.textnode import *
+import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     # create a list for the new nodes
@@ -30,3 +31,15 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 new_nodes.append(TextNode(split_text[i], text_type))
     
     return new_nodes
+
+def extract_markdown_images(text):
+    return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+
+def extract_markdown_links(text):
+    return re.findall(r"[^!]\[(.*?)\]\((.*?)\)", text)
+
+def extract_images_and_links(text):
+    return {
+        "images": extract_markdown_images(text),
+        "links": extract_markdown_links(text)
+    }
