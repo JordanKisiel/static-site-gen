@@ -9,6 +9,9 @@ class HTMLNode():
         raise NotImplementedError
     
     def props_to_html(self):
+        if self.props == None:
+            return ""
+
         props_list = self.props.items()
         sorted_props = sorted(props_list, key=lambda x: x[0])
         prop_str = ""
