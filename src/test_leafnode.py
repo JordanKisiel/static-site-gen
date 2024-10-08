@@ -25,3 +25,6 @@ class TestLeafNode(unittest.TestCase):
             "<a href='google.com'>My link</a>",
             leaf_node.to_html()
         )
+
+if __name__ == "__main__":
+    unittest.main()
