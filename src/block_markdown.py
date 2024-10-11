@@ -1,4 +1,5 @@
 import re
+from src.htmlnode import HTMLNode 
 
 block_type_paragraph= "paragraph"
 block_type_heading = "heading"
@@ -61,7 +62,44 @@ def block_to_block_type(md_block):
     
     return block_type_paragraph
 
+
+def markdown_to_html_node(markdown):
+    # split the markdown into blocks
+    blocks = markdown_to_block(markdown)
+
+    # loop over each block created above
+    for block in blocks:
+        type = block_to_block_type(block)
+        tag = block_type_to_tag(type, block)
+        # value = get_value_from_block(block)
+        node = HTMLNode(tag)
+
+    # 1. determine the type of block using the block_to_block_type fn
+    # 2. based on the type of block, create a new HTMLNode with the proper data
+    # 3. Assign the proper child HTMLNode objects to the block node
+    #     create a shared text_to_children(text) fn that works for all block types
+    #        takes str, returns list of HTMLNodes that represent the inline markdown
+    #        using previously created fn's (think TextNode -> HTMLNode)
+
+
+    # Make all the block nodes children under a single parent HTML node (a div)
+    # and return it
     
 
+def block_type_to_tag(type, block):
+    if type == block_type_paragraph: return "p"
+    if type == block_type_quote: return "quote"
+    if type == block_type_code: return "code"
+    if type == block_type_unordered_list: return "ul" 
+    if type == block_type_ordered_list: return "ol" 
 
+    if type == block_type_heading:
+        hashtags = block.split(" ", 1)[0]
+        num_hashtags = len(hashtags)
+        return f"h{num_hashtags}"
+    
+    raise ValueError("Invalid block type")
 
+def get_value_from_block(block):
+    #TODO
+    pass

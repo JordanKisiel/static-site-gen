@@ -176,6 +176,26 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             block_type_paragraph
         )
 
+    def test_block_type_tag(self):
+        heading1 = "# This is an h1"
+        heading6 = "###### This is an h6"
+
+        self.assertEqual(
+            block_type_to_tag(block_type_heading, heading1),
+            "h1"
+        )
+
+        self.assertEqual(
+            block_type_to_tag(block_type_heading, heading6),
+            "h6"
+        )
+
+        self.assertRaises(
+            ValueError,
+            block_type_to_tag,
+            "invalid type",
+            "some text"
+        )
 
          
         
