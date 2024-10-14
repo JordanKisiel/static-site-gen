@@ -262,6 +262,22 @@ this is paragraph text
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>"
         )
 
+    def test_extract_title(self):
+        md = """
+This is not a title
+
+# This is a title
+
+This is also not a title
+
+"""
+
+        self.assertEqual(
+            extract_title(md),
+            "This is a title"
+        )
+
+
 
 
 

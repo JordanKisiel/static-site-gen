@@ -154,3 +154,13 @@ def quote_to_html_node(block):
     content = " ".join(new_lines)
     children = text_to_children(content)
     return ParentNode("blockquote", children)
+
+def extract_title(markdown):
+    blocks = markdown_to_block(markdown)
+
+    for block in blocks:
+        heading_match = re.fullmatch(r"#{1}[ ].*", block)
+        if heading_match != None:
+            return block[2:]
+        
+    raise Exception("Document needs at least one h1 header")
