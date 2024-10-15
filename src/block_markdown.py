@@ -161,6 +161,6 @@ def extract_title(markdown):
     for block in blocks:
         heading_match = re.fullmatch(r"#{1}[ ].*", block)
         if heading_match != None:
-            return block[2:]
+            return block[2:].strip()
         
     raise Exception("Document needs at least one h1 header")

@@ -1,9 +1,12 @@
 import shutil
 import os
 import pathlib
+from src.block_markdown import *
 
 def main():
     copy("./static", "./public")
+
+    generate_page("./content/index.md", "template.html", "./public/index.html")
 
 def copy(src_path, dest_path):
     # make_public_test_dir()
@@ -31,16 +34,29 @@ def copy(src_path, dest_path):
         #recursive call
         copy(src, dest)
 
-    # log the path of each file that is copied (for debugging)
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
-    # notes:
-    #  -os.path.exists could be used to stop the recursion possibly
-    #  -os.listdir gets me a list of the entries in the dir (files and sub-dirs)
-    #  -os.path.join concatentates a path and all members of paths (is the return a str or a list of strs?)
-    #  -os.path.isfile returns true if path is a file
-    #  -os.mkdir makes new directory but won't overwrite existing directory (and will throw FileExistsError)
-    #  -shutil.copy copies a src file to a file or directory dst
-    #  -shutil.rmtree delete an entire directory tree
+    f = open(from_path, "r")
+    md_content = f.read()
+    f.close()
+
+    f = open(template_path, "r")
+    template = f.read()
+    f.close()
+
+    html = markdown_to_html_node(md_content).to_html()
+    title = extract_title(md_content)
+
+    template = template.replace("{{ Content }}", html)
+    template = template.replace("{{ Title }}", title)
+
+    # write resulting html to file in public
+    f = open(dest_path, "x")
+    f.write(template)
+    f.close()
+
+
 
 def make_public_test_dir():
     pathlib.Path("./public/test/test").mkdir(parents=True)
@@ -57,5 +73,6 @@ def delete_dir_contents(path):
             os.remove(path_to_delete)
         else:
             shutil.rmtree(path_to_delete)
+
 
 main()
