@@ -6,7 +6,7 @@ from src.block_markdown import *
 def main():
     copy("./static", "./public")
 
-    generate_page("./content/index.md", "template.html", "./public/index.html")
+    generate_pages_recursive("./content", "template.html", "./public")
 
 def copy(src_path, dest_path):
     # make_public_test_dir()
@@ -33,6 +33,22 @@ def copy(src_path, dest_path):
 
         #recursive call
         copy(src, dest)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    content_paths = os.listdir(dir_path_content)
+
+    for path in content_paths:
+        src = os.path.join(dir_path_content, path)
+        dest = os.path.join(dest_dir_path, path)
+
+        if os.path.isfile(src):
+            dest = f"{dest[:-2]}html"
+            generate_page(src, template_path, dest)
+            return
+        else:
+            os.mkdir(dest)
+
+        generate_pages_recursive(src, template_path, dest)
 
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -76,3 +92,4 @@ def delete_dir_contents(path):
 
 
 main()
+
